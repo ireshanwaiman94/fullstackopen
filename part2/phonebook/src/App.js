@@ -6,10 +6,10 @@ import PersonForm from './components/PersonForm'
 import personService from './services/persons'
 
 const App = () => {
-  const [ persons, setPersons] = useState([])
-  const [ allPersons, setAllPersons] = useState([])
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
+  const [persons, setPersons] = useState([])
+  const [allPersons, setAllPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [message, setMessage] = useState(null)
 
@@ -17,14 +17,14 @@ const App = () => {
     personService
       .getAll()
       .then(initialPersons => {
-      setAllPersons(initialPersons)
-    })
+        setAllPersons(initialPersons)
+      })
   }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
     const person = allPersons.filter((person) =>
-        person.name === newName
+      person.name === newName
     )
 
     const personToAdd = person[0]
@@ -59,32 +59,32 @@ const App = () => {
           })
       }
     } else {
-        const personToAdd = {
-            name: newName,
-            number: newNumber
-          }
-          personService
-            .create(personToAdd)
-            .then(returnedPerson => {
-              setAllPersons(allPersons.concat(returnedPerson))
-              setNewName('')
-              setNewNumber('')
-              setMessage(
-                `${newName} was successfully added`
-              )
-              setTimeout(() => {
-                setMessage(null)
-              }, 5000)
-            })
-            .catch(error => {
-              setMessage(
-                `[ERROR] ${error.response.data.error}`
-              )
-              setTimeout(() => {
-                setMessage(null)
-              }, 5000)
-              console.log(error.response.data)
-            })
+      const personToAdd = {
+        name: newName,
+        number: newNumber
+      }
+      personService
+        .create(personToAdd)
+        .then(returnedPerson => {
+          setAllPersons(allPersons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setMessage(
+            `${newName} was successfully added`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setMessage(
+            `[ERROR] ${error.response.data.error}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          console.log(error.response.data.error)
+        })
     }
   }
 
@@ -116,7 +116,7 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value)
-    const regex = new RegExp( newFilter, 'i' );
+    const regex = new RegExp(newFilter, 'i');
     const filteredPersons = () => allPersons.filter(person => person.name.match(regex))
     setPersons(filteredPersons)
   }

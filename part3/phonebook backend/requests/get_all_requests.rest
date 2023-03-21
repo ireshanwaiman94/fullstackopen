@@ -1,20 +1,26 @@
-GET http://localhost:3001/info
-
-###
 GET http://localhost:3001/api/persons
-
 ###
-GET http://localhost:3001/api/persons/2
-
+GET http://localhost:3001/api/persons/641805080a210389dcdec257
 ###
-POST http://localhost:3001/api/persons/ HTTP/1.1
-content-type: application/json
+GET http://localhost:3001/info
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
  {
-    "id":"",
-    "name":"ireshan waiman",
-    "number":"078-245-6558"
+    "name":"Ada Lovelace",
+    "number":"39445323523"
  }
 
 ###
-DELETE http://localhost:3001/api/persons/2
+PUT http://localhost:3001/api/persons/6417f80ca806d61035cf480c
+Content-Type: application/json
+
+ {
+    "name":"Ada Lovelace updated",
+    "number":"39445323524"
+ }
+###
+DELETE http://localhost:3001/api/persons/6417f80ca806d61035cf480c
+
 
