@@ -1,16 +1,17 @@
-require('dotenv').config()
-const express = require('express')
-const morgan = require('morgan')
-const cors = require('cors')
-const app = express()
+require('dotenv').config();
+const express = require('express');
+
+const morgan = require('morgan');
+const cors = require('cors');
+const app = express();
 
 
 const Person = require('./models/Person')
 
 morgan.token('body', (req) => JSON.stringify(req.body))
 
-const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
+const errorHandler = (error, response, next) => {
+    console.error(error.message);
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
@@ -18,10 +19,10 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).json({ error: error.message })
     }
 
-    next(error)
+    next(error);
 }
 
-const unknownEndpoint = (request, response) => {
+const unknownEndpoint = (response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
@@ -30,25 +31,25 @@ const generateId = () => {
     return randomNumber;
 }
 
-app.use(express.json())
-app.use(cors())
-app.use(express.static('build'))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(express.json());
+app.use(cors());
+app.use(express.static('build'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
-app.get('/info', (request, response) => {
+app.get('/info', (response) => {
     const personsCount = Person.length
     const currentDate = new Date();
     const options = { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
     const formattedDate = currentDate.toLocaleString('en-US', options);
     const timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    response.send(`<p>Phone book has info for ${personsCount} peoples <br><br> ${formattedDate} (${timezoneName})</p>`)
+    response.send(`<p>Phone book has info for ${personsCount} peoples <br><br> ${formattedDate} (${timezoneName})</p>`);
 
 })
-app.get('/api/persons', (request, response, next) => {
+app.get('/api/persons', (response, next) => {
     Person.find({}).then(persons => {
-        response.json(persons)
-    }).catch(error => next(error))
+        response.json(persons);
+    }).catch(error => next(error));
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -98,7 +99,7 @@ app.post('/api/persons', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
     // const body = request.body
-    const { name, number } = request.body
+    const { name, number } = request.body;
 
     // const person = {
     //     name: body.name,
@@ -107,15 +108,15 @@ app.put('/api/persons/:id', (request, response, next) => {
 
     Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
         .then(updatedPerson => {
-            response.json(updatedPerson)
+            response.json(updatedPerson);
         })
-        .catch(error => next(error))
+        .catch(error => next(error));
 })
 
-app.use(unknownEndpoint)
-app.use(errorHandler)
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`);
 })
